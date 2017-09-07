@@ -1,0 +1,15 @@
+{
+  "presets": [
+    ["env", {
+      "modules": false,
+      "targets": {
+        "browsers": ["last 3 versions"]
+      }
+    }]
+  ],
+  "ignore": [
+    "node_modules/*",
+    "dist/*"
+  ],
+  "plugins": ["syntax-dynamic-import"]
+}
