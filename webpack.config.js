@@ -4,16 +4,17 @@ const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const DashboardPlugin = require('webpack-dashboard/plugin');
+const FlowtypePlugin = require('flowtype-loader/plugin');
 
 const PUBLIC = path.resolve(__dirname, 'public');
 const PORT = 1415;
 
-const isDev = process.env.NODE_ENV === 'dev';
+const isProd = process.env.NODE_ENV === 'prod';
 const cssLoaders = [
   {
     loader: 'css-loader',
     options: {
-      minimize: !isDev,
+      minimize: isProd,
       camelCase: true,
       importLoaders: 1,
       url: true,
@@ -38,7 +39,7 @@ const config = {
     // This object key name define [name] variable inside filename string
     app: ['./assets/css/main.css', './src/index.js'],
   },
-  watch: isDev,
+  watch: !isProd,
   output: {
     filename: '[name].js',
     path: `${PUBLIC}/assets`,
@@ -56,16 +57,29 @@ const config = {
   devServer: {
     contentBase: PUBLIC,
     port: PORT,
-    // open: true,
     hot: true,
     overlay: true,
-    // quiet: true,
   },
   module: {
     rules: [
       {
         test: /\.js$/,
-        use: 'babel-loader',
+        use: [
+          { loader: 'babel-loader' },
+          {
+            loader: 'flowtype-loader',
+            options: {
+              failOnError: isProd,
+            },
+          },
+          {
+            loader: 'eslint-loader',
+            options: {
+              failOnWarning: isProd,
+              failOnError: isProd,
+            },
+          },
+        ],
       },
       {
         test: /\.css$/,
@@ -91,7 +105,7 @@ const config = {
           {
             loader: 'img-loader',
             options: {
-              enabled: !isDev,
+              enabled: isProd,
             },
           },
         ],
@@ -100,9 +114,10 @@ const config = {
   },
   plugins: [
     new DashboardPlugin(),
+    new FlowtypePlugin(),
     new ExtractTextPlugin({
       filename: '[name].css',
-      disable: isDev,
+      disable: !isProd,
     }),
     new CleanWebpackPlugin('public', {
       root: __dirname,
@@ -113,24 +128,12 @@ const config = {
   ],
 };
 
-if (!isDev) {
+if (isProd) {
   config.plugins = [
     ...config.plugins,
     new UglifyJSPlugin({ sourceMap: true }),
   ];
   config.devtool = 'cheap-module-eval-source-map';
-  config.module.rules = [
-    ...config.module.rules,
-    {
-      enforce: 'pre',
-      test: /\.js$/,
-      loader: 'eslint-loader',
-      options: {
-        failOnWarning: true,
-        failOnError: true,
-      },
-    },
-  ];
 }
 
 module.exports = config;

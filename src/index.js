@@ -1,6 +1,4 @@
-setTimeout(('click', () => {
-  // Lazy Loading
-  import('@js/log').then(({ default: log }) => {
-    log('Salut');
-  });
-}), 10000);
+// @flow
+import concat from './foo';
+
+concat('A', 'B');

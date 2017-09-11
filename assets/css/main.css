@@ -1,4 +1,10 @@
+:root {
+  --X: 40px;
+}
+
 .body-test {
   background: black url('../img/material.png');
-  transform: translateX(40px);
+  transform: translateX(var(--X));
+  padding: calc(var(--X) + 60px);
+  margin: repeat(4, 20px);
 }
