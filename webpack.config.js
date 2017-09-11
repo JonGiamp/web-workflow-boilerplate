@@ -3,9 +3,12 @@ const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const DashboardPlugin = require('webpack-dashboard/plugin');
+
+const PUBLIC = path.resolve(__dirname, 'public');
+const PORT = 1415;
 
 const isDev = process.env.NODE_ENV === 'dev';
-const DIST = path.resolve(__dirname, 'dist');
 const cssLoaders = [
   {
     loader: 'css-loader',
@@ -14,6 +17,8 @@ const cssLoaders = [
       camelCase: true,
       importLoaders: 1,
       url: true,
+      historyApiFallback: true,
+      quiet: true,
     },
   },
   {
@@ -31,27 +36,35 @@ const cssLoaders = [
 const config = {
   entry: {
     // This object key name define [name] variable inside filename string
-    app: ['./public/assets/css/main.css', './src/index.js'],
+    app: ['./assets/css/main.css', './src/index.js'],
   },
   watch: isDev,
   output: {
     filename: '[name].js',
-    path: DIST,
-    publicPath: `${DIST}/`,
+    path: `${PUBLIC}/assets`,
+    publicPath: '/assets/',
   },
   resolve: {
     alias: {
-      '@css': path.resolve(__dirname, 'public/assets/css'),
-      '@img': path.resolve(__dirname, 'public/assets/img'),
-      '@js': path.resolve(__dirname, 'src/'),
+      '@css': path.resolve(__dirname, 'assets/css'),
+      '@img': path.resolve(__dirname, 'assets/img'),
+      '@js': path.resolve(__dirname, 'src'),
+      '@fonts': path.resolve(__dirname, 'assets/fonts'),
     },
   },
   devtool: 'source-map',
+  devServer: {
+    contentBase: PUBLIC,
+    port: PORT,
+    // open: true,
+    hot: true,
+    overlay: true,
+    // quiet: true,
+  },
   module: {
     rules: [
       {
         test: /\.js$/,
-        // exclude: /(node_modules|dist)/,
         use: 'babel-loader',
       },
       {
@@ -86,14 +99,16 @@ const config = {
     ],
   },
   plugins: [
+    new DashboardPlugin(),
     new ExtractTextPlugin({
       filename: '[name].css',
       disable: isDev,
     }),
-    new CleanWebpackPlugin('dist', {
+    new CleanWebpackPlugin('public', {
       root: __dirname,
       verbose: true,
       dry: false,
+      exclude: ['index.html'],
     }),
   ],
 };
@@ -113,7 +128,6 @@ if (!isDev) {
       options: {
         failOnWarning: true,
         failOnError: true,
-        // cache: true,
       },
     },
   ];

@@ -2,7 +2,12 @@
   "name": "web-workflow-boilerplate",
   "version": "1.0.0",
   "description": "Web development workflow boilerplate",
-  "keywords": ["boilerplate", "babel", "webpack", "eslint"],
+  "keywords": [
+    "boilerplate",
+    "babel",
+    "webpack",
+    "eslint"
+  ],
   "author": "Jonathan Giamporcaro",
   "license": "MIT",
   "repository": {
@@ -17,6 +22,7 @@
     "babel-loader": "^7.1.2",
     "babel-minify": "^0.2.0",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "clean-webpack-plugin": "^0.1.16",
     "css-loader": "^0.28.7",
@@ -31,11 +37,13 @@
     "style-loader": "^0.18.2",
     "uglifyjs-webpack-plugin": "^0.4.6",
     "url-loader": "^0.5.9",
-    "webpack": "^3.5.5"
+    "webpack": "^3.5.5",
+    "webpack-dashboard": "^1.0.0-5",
+    "webpack-dev-server": "^2.7.1"
   },
   "scripts": {
     "prod": "webpack",
-    "dev": "NODE_ENV=dev webpack",
+    "dev": "NODE_ENV=dev webpack-dashboard -- webpack-dev-server --hot --color",
     "lint": "eslint .",
     "lintfix": "eslint . --fix"
   }
