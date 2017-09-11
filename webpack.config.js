@@ -10,6 +10,22 @@ const PUBLIC = path.resolve(__dirname, 'public');
 const PORT = 1415;
 
 const isProd = process.env.NODE_ENV === 'prod';
+const jsLoaders = [
+  { loader: 'babel-loader' },
+  {
+    loader: 'flowtype-loader',
+    options: {
+      failOnError: isProd,
+    },
+  },
+  {
+    loader: 'eslint-loader',
+    options: {
+      failOnWarning: isProd,
+      failOnError: isProd,
+    },
+  },
+];
 const cssLoaders = [
   {
     loader: 'css-loader',
@@ -33,6 +49,21 @@ const cssLoaders = [
     },
   },
 ];
+const assetsLoaders = [
+  {
+    loader: 'url-loader',
+    options: {
+      limit: 6500,
+      name: '[name][hash:8].[ext]',
+    },
+  },
+  {
+    loader: 'img-loader',
+    options: {
+      enabled: isProd,
+    },
+  },
+];
 
 const config = {
   entry: {
@@ -53,7 +84,7 @@ const config = {
       '@fonts': path.resolve(__dirname, 'assets/fonts'),
     },
   },
-  devtool: 'source-map',
+  devtool: isProd ? 'cheap-module-eval-source-map' : 'source-map',
   devServer: {
     contentBase: PUBLIC,
     port: PORT,
@@ -64,22 +95,7 @@ const config = {
     rules: [
       {
         test: /\.js$/,
-        use: [
-          { loader: 'babel-loader' },
-          {
-            loader: 'flowtype-loader',
-            options: {
-              failOnError: isProd,
-            },
-          },
-          {
-            loader: 'eslint-loader',
-            options: {
-              failOnWarning: isProd,
-              failOnError: isProd,
-            },
-          },
-        ],
+        use: jsLoaders,
       },
       {
         test: /\.css$/,
@@ -94,21 +110,7 @@ const config = {
       },
       {
         test: /\.(png|jpg|gif|svg)$/,
-        use: [
-          {
-            loader: 'url-loader',
-            options: {
-              limit: 6500,
-              name: '[name][hash:8].[ext]',
-            },
-          },
-          {
-            loader: 'img-loader',
-            options: {
-              enabled: isProd,
-            },
-          },
-        ],
+        use: assetsLoaders,
       },
     ],
   },
@@ -133,7 +135,6 @@ if (isProd) {
     ...config.plugins,
     new UglifyJSPlugin({ sourceMap: true }),
   ];
-  config.devtool = 'cheap-module-eval-source-map';
 }
 
 module.exports = config;
