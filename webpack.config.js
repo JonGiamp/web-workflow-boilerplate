@@ -8,6 +8,7 @@ const FlowtypePlugin = require('flowtype-loader/plugin');
 
 const PUBLIC = path.resolve(__dirname, 'public');
 const PORT = 1415;
+const IMGCAP = 6500;
 
 const isProd = process.env.NODE_ENV === 'prod';
 const jsLoaders = [
@@ -42,8 +43,11 @@ const cssLoaders = [
     loader: 'postcss-loader',
     options: {
       plugins: () => [
-        require('autoprefixer')({
+        require('postcss-cssnext')({
           browsers: ['last 3 versions'],
+          feature: {
+            autoprefixer: { grid: false },
+          },
         }),
       ],
     },
@@ -53,7 +57,7 @@ const assetsLoaders = [
   {
     loader: 'url-loader',
     options: {
-      limit: 6500,
+      limit: IMGCAP,
       name: '[name][hash:8].[ext]',
     },
   },
@@ -84,7 +88,7 @@ const config = {
       '@fonts': path.resolve(__dirname, 'assets/fonts'),
     },
   },
-  devtool: isProd ? 'cheap-module-eval-source-map' : 'source-map',
+  devtool: isProd ? 'source-map' : 'cheap-module-eval-source-map',
   devServer: {
     contentBase: PUBLIC,
     port: PORT,
