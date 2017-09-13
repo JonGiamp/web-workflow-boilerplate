@@ -9,7 +9,8 @@
     "eslint",
     "webpack-dev-server",
     "webpack-dashboard",
-    "flowtype"
+    "flowtype",
+    "postcss"
   ],
   "author": "Jonathan Giamporcaro",
   "license": "MIT",
@@ -19,7 +20,6 @@
   },
   "private": true,
   "devDependencies": {
-    "autoprefixer": "^7.1.3",
     "babel-core": "^6.26.0",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.1.2",
@@ -39,6 +39,7 @@
     "flow-bin": "^0.54.1",
     "flowtype-loader": "^0.2.2",
     "img-loader": "^2.0.0",
+    "postcss-cssnext": "^3.0.2",
     "postcss-loader": "^2.0.6",
     "style-loader": "^0.18.2",
     "uglifyjs-webpack-plugin": "^0.4.6",
