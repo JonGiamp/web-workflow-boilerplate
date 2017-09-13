@@ -85,7 +85,7 @@ This boilerplate uses:
 
 ### Babel configuration
 
-- [syntax-dynamic-import]((https://webpack.js.org/guides/lazy-loading/))
+- [syntax-dynamic-import](https://babeljs.io/docs/plugins/syntax-dynamic-import/)
 - [transform-object-rest-spread](https://babeljs.io/docs/plugins/transform-object-rest-spread/)
 - [transform-flow-comments](https://babeljs.io/docs/plugins/transform-flow-comments/)
 
